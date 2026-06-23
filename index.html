@@ -182,6 +182,71 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .color-swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
 .swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:transform .1s;}
 .swatch.selected{border-color:var(--text);transform:scale(1.1);}
+/* ══ DASHBOARD ══ */
+.db-hero{background:linear-gradient(135deg,var(--primary-dark) 0%,#1a6a5a 100%);border-radius:18px;padding:28px;margin-bottom:20px;color:white;}
+.db-hero-inner{display:flex;align-items:center;gap:24px;margin-bottom:24px;flex-wrap:wrap;}
+.db-countdown-block{text-align:center;background:rgba(255,255,255,.12);border-radius:14px;padding:16px 24px;min-width:100px;flex-shrink:0;}
+.db-countdown-num{font-family:'Sora',sans-serif;font-size:48px;font-weight:800;line-height:1;color:var(--accent);}
+.db-countdown-label{font-size:12px;opacity:.7;margin-top:4px;text-transform:uppercase;letter-spacing:.8px;}
+.db-trip-name-display{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;margin-bottom:6px;}
+.db-trip-dates-display{font-size:13px;opacity:.75;margin-bottom:4px;}
+.db-trip-duration{font-size:12px;opacity:.55;}
+.db-progress-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.db-prog-item{background:rgba(255,255,255,.1);border-radius:10px;padding:10px 12px;}
+.db-prog-label{font-size:11px;opacity:.65;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.db-prog-bar-wrap{background:rgba(255,255,255,.15);border-radius:20px;height:6px;margin-bottom:5px;}
+.db-prog-bar{background:var(--accent);border-radius:20px;height:6px;transition:width .4s ease;}
+.db-prog-val{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;}
+
+.db-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.db-stat-card{background:white;border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:var(--shadow);}
+.db-stat-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(26,40,48,.12);}
+.db-stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.db-stat-num{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;line-height:1;}
+.db-stat-label{font-size:11px;color:var(--text-muted);margin-top:2px;}
+
+.db-content-grid{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;}
+.db-section-card{background:white;border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:var(--shadow);}
+.db-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.db-section-title{font-family:'Sora',sans-serif;font-size:15px;font-weight:700;}
+
+/* Schedule timeline mini */
+.db-evt-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.db-evt-row:last-child{border-bottom:none;}
+.db-evt-time{font-size:11px;font-weight:700;color:var(--text-muted);width:52px;flex-shrink:0;padding-top:2px;}
+.db-evt-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.db-evt-body{flex:1;min-width:0;}
+.db-evt-name{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.db-evt-meta{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.db-day-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);padding:10px 0 6px;border-bottom:1px solid var(--border);margin-bottom:2px;}
+
+/* Balance mini rows */
+.db-bal-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.db-bal-row:last-child{border-bottom:none;}
+.db-bal-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+.db-bal-name{flex:1;font-size:13px;font-weight:600;}
+.db-bal-amt{font-size:12px;font-weight:700;}
+
+/* Packing snap */
+.db-pack-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.db-pack-row:last-child{border-bottom:none;}
+.db-pack-check{width:16px;height:16px;border-radius:4px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.db-pack-check.done{background:var(--green);border-color:var(--green);}
+
+/* Quick actions */
+.db-actions-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
+.db-action-btn{background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all .15s;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;color:var(--text);}
+.db-action-btn:hover{background:white;border-color:var(--primary);color:var(--primary);transform:translateY(-2px);box-shadow:var(--shadow);}
+.db-action-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+
+@media(max-width:760px){
+  .db-content-grid{grid-template-columns:1fr;}
+  .db-stats-grid{grid-template-columns:1fr 1fr;}
+  .db-actions-grid{grid-template-columns:repeat(3,1fr);}
+  .db-progress-row{grid-template-columns:1fr;}
+  .db-countdown-num{font-size:36px;}
+}
+
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:white;padding:11px 22px;border-radius:24px;font-size:13px;font-weight:600;transition:transform .3s ease;z-index:999;pointer-events:none;white-space:nowrap;}
 #toast.show{transform:translateX(-50%) translateY(0);}
 @media(max-width:600px){.main{padding:16px;}.app-header{padding:0 16px;}.locations-grid{grid-template-columns:1fr;}.bill-summary-grid{grid-template-columns:1fr 1fr;}.timeline::before{left:54px;}#statusBar{padding:6px 16px;}.split-mode-btn{font-size:11px;padding:7px 4px;}}
@@ -251,7 +316,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 
 <!-- TABS -->
 <nav class="tabs-bar">
-  <button class="tab-btn active" onclick="switchTab('locations')" id="tab-locations">📍 Locations <span class="tab-count" id="cnt-locations">0</span></button>
+  <button class="tab-btn active" onclick="switchTab('dashboard')" id="tab-dashboard">🏠 Dashboard</button>
+  <button class="tab-btn" onclick="switchTab('locations')" id="tab-locations">📍 Locations <span class="tab-count" id="cnt-locations">0</span></button>
   <button class="tab-btn" onclick="switchTab('schedule')" id="tab-schedule">🗓 Schedule <span class="tab-count" id="cnt-schedule">0</span></button>
   <button class="tab-btn" onclick="switchTab('bills')" id="tab-bills">💰 Bills <span class="tab-count" id="cnt-bills">0</span></button>
   <button class="tab-btn" onclick="switchTab('packing')" id="tab-packing">🎒 Packing</button>
@@ -260,7 +326,143 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 
 <main class="main">
 <!-- LOCATIONS -->
-<div class="tab-panel active" id="panel-locations">
+<!-- DASHBOARD -->
+<div class="tab-panel active" id="panel-dashboard">
+
+  <!-- COUNTDOWN HERO -->
+  <div id="db-hero" class="db-hero">
+    <div class="db-hero-inner">
+      <div class="db-countdown-block">
+        <div class="db-countdown-num" id="db-days">—</div>
+        <div class="db-countdown-label" id="db-days-label">days to go</div>
+      </div>
+      <div class="db-trip-info">
+        <div class="db-trip-name-display" id="db-trip-name">Your Trip</div>
+        <div class="db-trip-dates-display" id="db-trip-dates">Set your trip dates to get started</div>
+        <div class="db-trip-duration" id="db-trip-duration"></div>
+      </div>
+    </div>
+    <div class="db-progress-row">
+      <div class="db-prog-item">
+        <div class="db-prog-label">Locations</div>
+        <div class="db-prog-bar-wrap"><div class="db-prog-bar" id="db-bar-loc" style="width:0%"></div></div>
+        <div class="db-prog-val" id="db-val-loc">0</div>
+      </div>
+      <div class="db-prog-item">
+        <div class="db-prog-label">Packing</div>
+        <div class="db-prog-bar-wrap"><div class="db-prog-bar" id="db-bar-pack" style="width:0%"></div></div>
+        <div class="db-prog-val" id="db-val-pack">0%</div>
+      </div>
+      <div class="db-prog-item">
+        <div class="db-prog-label">Budget</div>
+        <div class="db-prog-bar-wrap"><div class="db-prog-bar" id="db-bar-budget" style="width:0%"></div></div>
+        <div class="db-prog-val" id="db-val-budget">$0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="db-stats-grid">
+    <div class="db-stat-card" onclick="switchTab('members')">
+      <div class="db-stat-icon" style="background:#E8F4FA;color:#1E6B8C">👥</div>
+      <div class="db-stat-body">
+        <div class="db-stat-num" id="db-stat-members">0</div>
+        <div class="db-stat-label">Members</div>
+      </div>
+    </div>
+    <div class="db-stat-card" onclick="switchTab('locations')">
+      <div class="db-stat-icon" style="background:#EAF6F1;color:#3A8A6E">📍</div>
+      <div class="db-stat-body">
+        <div class="db-stat-num" id="db-stat-locs">0</div>
+        <div class="db-stat-label">Locations</div>
+      </div>
+    </div>
+    <div class="db-stat-card" onclick="switchTab('schedule')">
+      <div class="db-stat-icon" style="background:#FEF4DC;color:#F0A500">🗓</div>
+      <div class="db-stat-body">
+        <div class="db-stat-num" id="db-stat-events">0</div>
+        <div class="db-stat-label">Events</div>
+      </div>
+    </div>
+    <div class="db-stat-card" onclick="switchTab('bills')">
+      <div class="db-stat-icon" style="background:#FEF0EF;color:#E05C52">💰</div>
+      <div class="db-stat-body">
+        <div class="db-stat-num" id="db-stat-spent">$0</div>
+        <div class="db-stat-label">Spent</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT GRID: Today + Feed -->
+  <div class="db-content-grid">
+
+    <!-- TODAY'S / NEXT SCHEDULE -->
+    <div class="db-section-card">
+      <div class="db-section-header">
+        <div class="db-section-title" id="db-schedule-title">📅 Upcoming Schedule</div>
+        <button class="btn btn-ghost" style="font-size:12px;padding:5px 12px" onclick="switchTab('schedule')">View all</button>
+      </div>
+      <div id="db-schedule-list"></div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+
+      <!-- MEMBERS & BALANCES -->
+      <div class="db-section-card" style="margin-bottom:16px">
+        <div class="db-section-header">
+          <div class="db-section-title">👥 Who Owes What</div>
+          <button class="btn btn-ghost" style="font-size:12px;padding:5px 12px" onclick="switchTab('bills')">View bills</button>
+        </div>
+        <div id="db-balances-list"></div>
+      </div>
+
+      <!-- PACKING SNAPSHOT -->
+      <div class="db-section-card">
+        <div class="db-section-header">
+          <div class="db-section-title">🎒 Packing</div>
+          <button class="btn btn-ghost" style="font-size:12px;padding:5px 12px" onclick="switchTab('packing')">View list</button>
+        </div>
+        <div id="db-packing-snap"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="db-section-card" style="margin-top:16px">
+    <div class="db-section-title" style="margin-bottom:14px">⚡ Quick Actions</div>
+    <div class="db-actions-grid">
+      <button class="db-action-btn" onclick="switchTab('locations');setTimeout(openAddLocation,100)">
+        <span class="db-action-icon" style="background:#EAF6F1;color:#3A8A6E">📍</span>
+        <span>Add Location</span>
+      </button>
+      <button class="db-action-btn" onclick="switchTab('schedule');setTimeout(openAddEvent,100)">
+        <span class="db-action-icon" style="background:#FEF4DC;color:#F0A500">🗓</span>
+        <span>Add Event</span>
+      </button>
+      <button class="db-action-btn" onclick="switchTab('bills');setTimeout(openAddExpense,100)">
+        <span class="db-action-icon" style="background:#FEF0EF;color:#E05C52">💰</span>
+        <span>Add Expense</span>
+      </button>
+      <button class="db-action-btn" onclick="switchTab('packing');setTimeout(openAddPacking,100)">
+        <span class="db-action-icon" style="background:#E8F4FA;color:#1E6B8C">🎒</span>
+        <span>Add Item</span>
+      </button>
+      <button class="db-action-btn" onclick="openAddMember()">
+        <span class="db-action-icon" style="background:#F4EFFE;color:#8B5CF6">👤</span>
+        <span>Add Member</span>
+      </button>
+      <button class="db-action-btn" onclick="openShareModal()">
+        <span class="db-action-icon" style="background:#EAF6F1;color:#3A8A6E">🔗</span>
+        <span>Invite Others</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<div class="tab-panel" id="panel-locations">
   <div class="section-header"><div><div class="section-title">Places to Visit</div><div class="section-subtitle">Plan all the spots your group wants to explore</div></div><button class="btn btn-primary" onclick="openAddLocation()">+ Add Location</button></div>
   <div class="filter-row" id="locationFilters">
     <button class="filter-chip active" onclick="filterLocations('all',this)">All</button>
@@ -543,7 +745,7 @@ function maybeCloseModal(e,id){if(e.target===document.getElementById(id))closeMo
 // ══ TABS ══
 function switchTab(tab){document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('panel-'+tab).classList.add('active');document.getElementById('tab-'+tab).classList.add('active');}
 function updateCounts(){document.getElementById('cnt-locations').textContent=state.locations.length;document.getElementById('cnt-schedule').textContent=state.events.length;document.getElementById('cnt-bills').textContent=state.expenses.length;document.getElementById('cnt-members').textContent=state.members.length;}
-function renderAll(){if(state.tripName)document.getElementById('tripName').value=state.tripName;if(state.tripStart)document.getElementById('tripStart').value=state.tripStart;if(state.tripEnd)document.getElementById('tripEnd').value=state.tripEnd;renderMembersStrip();renderLocations();renderDaySelector();renderTimeline();renderExpenses();renderBalances();renderPackingList();renderMembersTab();updateCounts();}
+function renderAll(){renderDashboard();if(state.tripName)document.getElementById('tripName').value=state.tripName;if(state.tripStart)document.getElementById('tripStart').value=state.tripStart;if(state.tripEnd)document.getElementById('tripEnd').value=state.tripEnd;renderMembersStrip();renderLocations();renderDaySelector();renderTimeline();renderExpenses();renderBalances();renderPackingList();renderMembersTab();updateCounts();}
 
 // ══ MEMBERS ══
 const CAT_COLOR={Sightseeing:'#1E6B8C',Restaurant:'#E05C52',Hotel:'#F0A500',Activity:'#3A8A6E',Shopping:'#8B5CF6',Transport:'#6B7E8A',Beach:'#0891B2',Nature:'#059669',Other:'#D97706'};
@@ -685,6 +887,158 @@ function renderPackingList(){const c=document.getElementById('packingList'),f=st
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2600);}
 
 // ══ INIT ══
+
+// ══ DASHBOARD ══
+function renderDashboard(){
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // ── Countdown ──
+  const startVal = state.tripStart, endVal = state.tripEnd;
+  const nameEl = document.getElementById('db-trip-name');
+  const daysEl = document.getElementById('db-days');
+  const labelEl = document.getElementById('db-days-label');
+  const datesEl = document.getElementById('db-trip-dates');
+  const durEl   = document.getElementById('db-trip-duration');
+  const tnEl    = document.getElementById('db-schedule-title');
+
+  if(nameEl) nameEl.textContent = state.tripName || 'Your Trip';
+
+  if(startVal && endVal){
+    const start = new Date(startVal+'T00:00'), end = new Date(endVal+'T00:00');
+    const diffMs = start - today, diffDays = Math.ceil(diffMs/(1000*60*60*24));
+    const tripLen = Math.round((end-start)/(1000*60*60*24))+1;
+    if(daysEl){
+      if(diffDays > 0){ daysEl.textContent = diffDays; labelEl.textContent = diffDays===1?'day to go':'days to go'; }
+      else if(diffDays <= 0 && today <= end){ daysEl.textContent = '✈️'; labelEl.textContent = 'Trip is on!'; }
+      else { daysEl.textContent = '🏁'; labelEl.textContent = 'Trip done!'; }
+    }
+    if(datesEl) datesEl.textContent = start.toLocaleDateString('en',{weekday:'short',month:'long',day:'numeric'}) + ' → ' + end.toLocaleDateString('en',{weekday:'short',month:'long',day:'numeric'});
+    if(durEl)   durEl.textContent = tripLen + (tripLen===1?' night':' nights') + ' · ' + state.members.length + ' traveller' + (state.members.length!==1?'s':'');
+  } else {
+    if(daysEl)  daysEl.textContent = '?';
+    if(labelEl) labelEl.textContent = 'set dates';
+    if(datesEl) datesEl.textContent = 'Set your trip dates in the header';
+    if(durEl)   durEl.textContent = '';
+  }
+
+  // ── Progress bars ──
+  const confirmedLocs = state.locations.filter(l=>l.status==='going'||l.status==='done').length;
+  const locPct = state.locations.length ? Math.round(confirmedLocs/state.locations.length*100) : 0;
+  const packedPct = state.packing.length ? Math.round(state.packing.filter(p=>p.packed).length/state.packing.length*100) : 0;
+  const totalSpent = state.expenses.reduce((s,e)=>s+e.amount,0);
+  const budgetPct = 0; // no budget cap set — show 0
+  const setW = (id,pct) => { const el=document.getElementById(id); if(el) el.style.width = Math.min(pct,100)+'%'; };
+  setW('db-bar-loc', locPct); setW('db-bar-pack', packedPct); setW('db-bar-budget', budgetPct);
+  const sv = id => document.getElementById(id);
+  if(sv('db-val-loc'))    sv('db-val-loc').textContent    = confirmedLocs+'/'+state.locations.length;
+  if(sv('db-val-pack'))   sv('db-val-pack').textContent   = packedPct+'%';
+  if(sv('db-val-budget')) sv('db-val-budget').textContent = fmt(totalSpent);
+
+  // ── Stat cards ──
+  if(sv('db-stat-members')) sv('db-stat-members').textContent = state.members.length;
+  if(sv('db-stat-locs'))    sv('db-stat-locs').textContent    = state.locations.length;
+  if(sv('db-stat-events'))  sv('db-stat-events').textContent  = state.events.length;
+  if(sv('db-stat-spent'))   sv('db-stat-spent').textContent   = fmt(totalSpent);
+
+  // ── Schedule: figure out which day to show ──
+  const days = getTripDays();
+  let showDayIdx = state.selectedDay;
+  if(days.length > 0){
+    // find today or next day with events
+    const todayIdx = days.findIndex(d=>{ const dd=new Date(d); dd.setHours(0,0,0,0); return dd.getTime()===today.getTime(); });
+    if(todayIdx >= 0) showDayIdx = todayIdx;
+    else {
+      // find next future day with events
+      const futureIdx = days.findIndex(d=>new Date(d+'') >= today);
+      if(futureIdx >= 0) showDayIdx = futureIdx;
+    }
+  }
+  // Show up to 3 upcoming days with events
+  const schedEl = document.getElementById('db-schedule-list');
+  if(schedEl){
+    const maxDays = days.length > 0 ? days.length : 7;
+    let html = '', shown = 0;
+    for(let d = showDayIdx; d < maxDays && shown < 3; d++){
+      const dayEvts = state.events.filter(e=>e.day===d).sort((a,b)=>a.start.localeCompare(b.start));
+      if(dayEvts.length === 0) continue;
+      const dayLabel = days.length > 0
+        ? days[d].toLocaleDateString('en',{weekday:'long',month:'short',day:'numeric'})
+        : 'Day '+(d+1);
+      html += '<div class="db-day-label">' + dayLabel + '</div>';
+      dayEvts.slice(0,4).forEach(e=>{
+        const col = CAT_EVT_COLOR[e.cat]||CAT_EVT_DEFAULT;
+        const dur = getDuration(e.start,e.end);
+        html += '<div class="db-evt-row">' +
+          '<div class="db-evt-time">'+fmt12(e.start)+'</div>' +
+          '<div class="db-evt-dot" style="background:'+col.border+'"></div>' +
+          '<div class="db-evt-body">' +
+            '<div class="db-evt-name">'+e.cat+' '+e.name+'</div>' +
+            '<div class="db-evt-meta">'+(dur?'⏱ '+dur:'')+(e.loc?' · 📍 '+e.loc:'')+(e.weather?' · '+e.weather:'')+'</div>' +
+          '</div></div>';
+      });
+      if(dayEvts.length > 4) html += '<div style="font-size:11px;color:var(--text-muted);padding:6px 0">+' + (dayEvts.length-4) + ' more events</div>';
+      shown++;
+    }
+    if(!html) html = '<div style="text-align:center;padding:24px 0;color:var(--text-muted);font-size:13px">No upcoming events<br><span style="font-size:12px">Add events in the Schedule tab</span></div>';
+    schedEl.innerHTML = html;
+    if(tnEl) tnEl.textContent = shown > 0 ? '📅 Upcoming Schedule' : '📅 Schedule';
+  }
+
+  // ── Balances ──
+  const balEl = document.getElementById('db-balances-list');
+  if(balEl){
+    if(state.members.length === 0){
+      balEl.innerHTML = '<div style="text-align:center;padding:16px 0;color:var(--text-muted);font-size:13px">Add members to track balances</div>';
+    } else {
+      const bal = {};
+      state.members.forEach(m=>bal[m.id]=0);
+      state.expenses.forEach(exp=>{
+        if(bal[exp.paidBy]!==undefined) bal[exp.paidBy]+=exp.amount;
+        state.members.forEach(m=>{ bal[m.id]-=getPersonShare(exp,m.id); });
+      });
+      balEl.innerHTML = state.members.map(m=>{
+        const net=bal[m.id]||0, pos=net>0.005, neg=net<-0.005;
+        return '<div class="db-bal-row">' +
+          '<div class="db-bal-avatar" style="background:'+m.color+'">'+initials(m.name)+'</div>' +
+          '<div class="db-bal-name">'+m.name+'</div>' +
+          '<div class="db-bal-amt" style="color:'+(pos?'var(--green)':neg?'var(--coral)':'var(--text-muted)')+'">'+
+            (pos?'+'+fmt(net):neg?'-'+fmt(Math.abs(net)):'Settled')+'</div>' +
+        '</div>';
+      }).join('');
+    }
+  }
+
+  // ── Packing snapshot (unpacked items only, max 6) ──
+  const packEl = document.getElementById('db-packing-snap');
+  if(packEl){
+    const unpacked = state.packing.filter(p=>!p.packed);
+    const packed   = state.packing.filter(p=>p.packed).length;
+    const total    = state.packing.length;
+    if(total === 0){
+      packEl.innerHTML = '<div style="text-align:center;padding:16px 0;color:var(--text-muted);font-size:13px">Nothing added yet</div>';
+    } else {
+      const pct = Math.round(packed/total*100);
+      let html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">' +
+        '<span style="font-size:12px;color:var(--text-muted)">' + packed + ' of ' + total + ' packed</span>' +
+        `<span style="font-family:'Sora',sans-serif;font-weight:800;font-size:15px;color:${pct===100?'var(--green)':'var(--text)'}">` + pct + `%</span>` +
+        '</div>' +
+        '<div style="background:var(--border);border-radius:20px;height:6px;margin-bottom:12px">' +
+          '<div style="background:var(--green);border-radius:20px;height:6px;width:'+pct+'%;transition:width .4s"></div>' +
+        '</div>';
+      unpacked.slice(0,6).forEach(p=>{
+        const a = p.assign ? state.members.find(m=>m.id===p.assign) : null;
+        html += '<div class="db-pack-row">' +
+          '<div class="db-pack-check"></div>' +
+          '<span style="flex:1">' + p.name + (p.qty>1?' × '+p.qty:'') + '</span>' +
+          (a?'<span style="font-size:11px;color:'+a.color+';font-weight:600">'+a.name+'</span>':'') +
+        '</div>';
+      });
+      if(unpacked.length > 6) html += '<div style="font-size:11px;color:var(--text-muted);padding:6px 0 0">+' + (unpacked.length-6) + ' more items to pack</div>';
+      packEl.innerHTML = html;
+    }
+  }
+}
+
 function init(){
   document.getElementById('tripName').addEventListener('input',()=>{state.tripName=document.getElementById('tripName').value;save();});
   document.getElementById('tripStart').addEventListener('change',()=>{state.tripStart=document.getElementById('tripStart').value;save();renderDaySelector();});
