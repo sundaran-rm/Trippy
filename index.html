@@ -271,8 +271,17 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="setup-tab" onclick="switchSetupTab('join',this)">🔗 Join Trip</button>
   </div>
   <div id="setupCreate">
-    <div class="form-field"><label class="form-label">Trip Code</label><input class="form-input" id="setupCode" placeholder="e.g. SMITHFAMILY2026" style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;letter-spacing:1px;"></div>
-    <div class="form-field"><label class="form-label">Your Name</label><input class="form-input" id="setupName" placeholder="Your name"></div>
+    <div class="form-field">
+      <label class="form-label">Your Name</label>
+      <input class="form-input" id="setupName" placeholder="Your name (shown to others)">
+    </div>
+    <div class="form-field">
+      <label class="form-label">Trip Code <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">— auto-generated, or type your own</span></label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input class="form-input" id="setupCode" placeholder="X7K2PM" style="font-family:'Sora',sans-serif;font-weight:800;font-size:22px;letter-spacing:5px;text-transform:uppercase;flex:1;" maxlength="8" oninput="this.value=this.value.toUpperCase()">
+        <button class="btn btn-ghost" style="padding:9px 14px;white-space:nowrap;flex-shrink:0" onclick="document.getElementById('setupCode').value=genShareCode()" title="Regenerate">🔀 New</button>
+      </div>
+    </div>
     <div class="form-field">
       <label class="form-label">Firebase Config</label>
       <button class="guide-toggle" onclick="toggleGuide()">📖 How to get Firebase config (click to expand)</button>
@@ -280,7 +289,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         <ol><li>Go to <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a></li>
         <li>Add project → Build → <strong>Firestore Database</strong> → Create (test mode)</li>
         <li>Project Settings → Your apps → web icon → get config</li></ol>
-        <div class="setup-rules"><strong>Firestore Rules:</strong><br><code>match /trips/{c}/{d=**} { allow read, write: if true; }</code></div>
+        <div class="setup-rules"><strong>Firestore Rules:</strong><br><code>match /{document=**} { allow read, write: if true; }</code><br><em style="font-size:11px;opacity:.8">(Covers trips + invites collections)</em></div>
       </div>
       <textarea class="form-textarea" id="setupConfig" style="font-size:12px;min-height:120px;font-family:monospace;">{
   apiKey: "AIzaSyCqkPVHHFwtZPeU",
@@ -295,9 +304,17 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-ghost" style="width:100%;justify-content:center;padding:11px;margin-top:8px" onclick="useOffline()">Continue offline</button>
   </div>
   <div id="setupJoin" style="display:none;">
-    <div style="background:var(--green-light);border-radius:10px;padding:14px;font-size:13px;margin-bottom:18px;line-height:1.6;color:var(--green);">🔐 Paste the invite code from your trip organiser.</div>
-    <div class="form-field"><label class="form-label">Invite Code</label><textarea class="invite-field" id="joinBlob" placeholder="Paste invite code here…"></textarea></div>
-    <div class="form-field"><label class="form-label">Your Name</label><input class="form-input" id="joinName" placeholder="Your name"></div>
+    <div style="background:var(--green-light);border-radius:10px;padding:14px;font-size:13px;margin-bottom:18px;line-height:1.6;color:var(--green);">
+      🔐 Paste the <strong>encrypted invite code</strong> sent by your trip organiser — Firebase credentials are embedded inside.
+    </div>
+    <div class="form-field">
+      <label class="form-label">Your Name</label>
+      <input class="form-input" id="joinName" placeholder="Your name (shown to others)">
+    </div>
+    <div class="form-field">
+      <label class="form-label">Invite Code</label>
+      <textarea class="form-textarea" id="joinBlob" placeholder="Paste invite code here…" style="font-family:monospace;font-size:11px;min-height:90px;"></textarea>
+    </div>
     <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px" onclick="doJoin()">🔗 Join Trip</button>
   </div>
 </div></div>
@@ -317,6 +334,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         <div class="trip-dates"><span>From</span><input type="date" id="tripStart"><span>To</span><input type="date" id="tripEnd"></div>
       </div>
     </div>
+   
   </div>
   <div class="members-strip" id="membersStrip"></div>
 </header>
@@ -539,10 +557,24 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 <div class="modal-overlay" id="shareModal" onclick="maybeCloseModal(event,'shareModal')">
   <div class="modal" style="max-width:460px;">
     <div class="modal-title">🔗 Invite Family Members</div>
-    <div class="shield-note"><span style="font-size:18px;flex-shrink:0">🔐</span><span>Firebase credentials are <strong>AES-256 encrypted</strong> inside this invite code. Members paste just this and connect silently.</span></div>
-    <div class="invite-display-box"><div class="lbl">Encrypted Invite Code</div><div class="invite-blob" id="shareBlobDisplay">Generating…</div></div>
-    <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:14px" onclick="copyInviteBlob()">📋 Copy Invite Code</button>
-    <div style="background:var(--primary-light);border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:var(--primary);"><strong>How others join:</strong><ol style="padding-left:16px;margin-top:4px;"><li>Send them this HTML file</li><li>Open → click <strong>Join Trip</strong></li><li>Paste invite code + enter name</li><li>Done — syncs instantly ✈️</li></ol></div>
+    <div class="shield-note" style="display:flex;align-items:flex-start;gap:10px;background:var(--green-light);border-radius:10px;padding:12px;font-size:12px;color:var(--green);line-height:1.6;margin-bottom:14px;">
+      <span style="font-size:18px;flex-shrink:0">🔐</span>
+      <span>Firebase credentials are <strong>AES-256 encrypted</strong> inside this invite code. Family members paste it and connect — they never see the raw config.</span>
+    </div>
+    <div style="background:var(--primary-dark);border-radius:12px;padding:18px;margin-bottom:14px;">
+      <div style="font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Encrypted Invite Code</div>
+      <div id="shareBlobDisplay" style="font-family:monospace;font-size:11px;color:rgba(255,255,255,.75);word-break:break-all;line-height:1.6;max-height:90px;overflow-y:auto;padding:10px;background:rgba(0,0,0,.25);border-radius:8px;">Generating…</div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:14px;padding:12px" onclick="copyInviteBlob()">📋 Copy Invite Code</button>
+    <div style="background:var(--primary-light);border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:var(--primary);">
+      <strong>How others join:</strong>
+      <ol style="padding-left:16px;margin-top:4px;">
+        <li>Send them this HTML file + the invite code above</li>
+        <li>Open app → click <strong>Join Trip</strong></li>
+        <li>Paste the invite code + enter their name</li>
+        <li>Done — syncs instantly ✈️</li>
+      </ol>
+    </div>
     <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('shareModal')">Done</button></div>
   </div>
 </div>
@@ -690,12 +722,14 @@ let mySessionId='sess_'+Math.random().toString(36).substr(2,9);
 let isListenerUpdate=false,firestoreUnsubscribe=null,presenceInterval=null,currentInviteBlob='';
 function parseConfig(raw){raw=raw.trim().replace(/;+$/,'');try{return JSON.parse(raw);}catch(_){}try{return JSON.parse(raw.replace(/([{,]\s*)([A-Za-z_][A-Za-z0-9_]*)\s*:/g,'$1"$2":'));}catch(_){}throw new Error('Could not parse Firebase config');}
 function connectFirestore(config,code,name){
+  hasReceivedFirstSnapshot=false;
   try{
     if(!firebase.apps.length)firebase.initializeApp(config);
     db=firebase.firestore();tripCode=code.toUpperCase().replace(/\s+/g,'-');myName=name;
     tripDocRef=db.collection('trips').doc(tripCode);
     firestoreUnsubscribe=tripDocRef.onSnapshot(snap=>{
-      if(!snap.exists){saveToFirestore();return;}
+      hasReceivedFirstSnapshot=true;
+      if(!snap.exists){if(isCreator)saveToFirestore();return;}
       const d=snap.data();isListenerUpdate=true;
       try{
         if(d.tripName!==undefined){state.tripName=d.tripName;document.getElementById('tripName').value=d.tripName;}
@@ -728,7 +762,7 @@ function setupPresence(){
 function setConnStatus(ok){document.getElementById('connDot').style.background=ok?'#4ade80':'#f87171';document.getElementById('connLabel').textContent=ok?'Live sync · '+tripCode:'Reconnecting · '+tripCode;}
 function flashSync(){const bar=document.getElementById('statusBar');bar.classList.remove('sync-flash');void bar.offsetWidth;bar.classList.add('sync-flash');}
 function saveToFirestore(){if(!tripDocRef||isListenerUpdate)return;tripDocRef.set({tripName:state.tripName||'',tripStart:state.tripStart||'',tripEnd:state.tripEnd||'',members:JSON.stringify(state.members),locations:JSON.stringify(state.locations),events:JSON.stringify(state.events),expenses:JSON.stringify(state.expenses),packing:JSON.stringify(state.packing),activities:JSON.stringify(state.activities||[]),lastUpdated:firebase.firestore.FieldValue.serverTimestamp(),lastUpdatedBy:myName});}
-function save(){if(isListenerUpdate)return;saveToFirestore();try{localStorage.setItem('famTrip',JSON.stringify(state));}catch(e){}}
+function save(){if(isListenerUpdate)return;if(db&&!hasReceivedFirstSnapshot)return;saveToFirestore();try{localStorage.setItem('famTrip',JSON.stringify(state));}catch(e){}}
 
 // ══ APP STATE ══
 const MEMBER_COLORS=['#E05C52','#1E6B8C','#F0A500','#3A8A6E','#8B5CF6','#EC4899','#0891B2','#D97706','#059669','#7C3AED'];
@@ -741,18 +775,62 @@ let idCounter=Date.now();
 const uid=()=>(++idCounter).toString(36);
 const fmt=n=>'$'+parseFloat(n||0).toFixed(2);
 const initials=n=>n.trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+function genShareCode(){ return Array.from({length:6},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join(''); }
 
 // ══ SETUP ══
-function doCreate(){const code=document.getElementById('setupCode').value.trim(),name=document.getElementById('setupName').value.trim()||'Organiser',raw=document.getElementById('setupConfig').value.trim();if(!code){toast('Please enter a trip code');return;}let config;try{config=parseConfig(raw);}catch(e){toast('❌ '+e.message);return;}if(connectFirestore(config,code,name)){encryptPayload({config,tripCode:code.toUpperCase().replace(/\s+/g,'-')}).then(blob=>{currentInviteBlob=blob;localStorage.setItem('fbInviteBlob',blob);});localStorage.setItem('fbCode',tripCode);localStorage.setItem('fbName',name);}}
-async function doJoin(){const blobStr=document.getElementById('joinBlob').value.trim(),name=document.getElementById('joinName').value.trim()||'Family Member';if(!blobStr){toast('Please paste the invite code');return;}try{toast('🔓 Decrypting…');const{config,tripCode:code}=await decryptPayload(blobStr);if(connectFirestore(config,code,name)){currentInviteBlob=blobStr;localStorage.setItem('fbInviteBlob',blobStr);localStorage.setItem('fbCode',code.toUpperCase().replace(/\s+/g,'-'));localStorage.setItem('fbName',name);}}catch(e){toast('❌ Invalid invite code');}}
+function doCreate(){
+  const raw=document.getElementById('setupConfig').value.trim();
+  const name=document.getElementById('setupName').value.trim()||'Organiser';
+  let code=document.getElementById('setupCode').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(!code){code=genShareCode();document.getElementById('setupCode').value=code;}
+  let config;try{config=parseConfig(raw);}catch(e){toast('❌ '+e.message);return;}
+  isCreator=true;
+  if(connectFirestore(config,code,name)){
+    encryptPayload({config,tripCode:tripCode}).then(blob=>{
+      currentInviteBlob=blob;
+      localStorage.setItem('fbInviteBlob',blob);
+    });
+    localStorage.setItem('fbCode',tripCode);
+    localStorage.setItem('fbName',name);
+  }
+}
+
+async function doJoin(){
+  const blobStr=document.getElementById('joinBlob').value.trim();
+  const name=document.getElementById('joinName').value.trim()||'Family Member';
+  if(!blobStr){toast('Please paste the invite code');return;}
+  try{
+    toast('🔓 Decrypting invite…');
+    const{config,tripCode:code}=await decryptPayload(blobStr);
+    isCreator=false;
+    if(connectFirestore(config,code,name)){
+      currentInviteBlob=blobStr;
+      localStorage.setItem('fbInviteBlob',blobStr);
+      localStorage.setItem('fbCode',tripCode);
+      localStorage.setItem('fbName',name);
+    }
+  }catch(e){toast('❌ Invalid invite code — make sure you copied the full string');}
+}
+
 function useOffline(){document.getElementById('setupOverlay').style.display='none';renderAll();toast('Running offline');}
-function disconnectTrip(){if(!confirm('Disconnect from this trip?'))return;if(firestoreUnsubscribe)firestoreUnsubscribe();clearInterval(presenceInterval);['fbInviteBlob','fbCode','fbName'].forEach(k=>localStorage.removeItem(k));location.reload();}
+function disconnectTrip(){if(!confirm('Disconnect from this trip?'))return;if(firestoreUnsubscribe)firestoreUnsubscribe();clearInterval(presenceInterval);['fbConfig','fbCode','fbName'].forEach(k=>localStorage.removeItem(k));location.reload();}
 function switchSetupTab(tab,btn){document.querySelectorAll('.setup-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('setupCreate').style.display=tab==='create'?'':'none';document.getElementById('setupJoin').style.display=tab==='join'?'':'none';}
 function toggleGuide(){document.getElementById('guideBox').classList.toggle('open');}
 
 // ══ SHARE ══
-async function openShareModal(){document.getElementById('shareBlobDisplay').textContent='Generating…';document.getElementById('shareModal').classList.add('open');if(currentInviteBlob){document.getElementById('shareBlobDisplay').textContent=currentInviteBlob;return;}toast('⚠️ Connect to Firebase first');}
-function copyInviteBlob(){const t=document.getElementById('shareBlobDisplay').textContent;if(!t||t==='Generating…'){toast('Still generating…');return;}navigator.clipboard.writeText(t).then(()=>toast('Invite code copied! 📋'));}
+
+function openShareModal(){
+  const el=document.getElementById('shareBlobDisplay');
+  if(el) el.textContent=currentInviteBlob||'Generating…';
+  document.getElementById('shareModal').classList.add('open');
+  if(!currentInviteBlob) toast('⚠️ Connect to Firebase first to generate an invite');
+}
+
+function copyInviteBlob(){
+  if(!currentInviteBlob||currentInviteBlob==='Generating…'){toast('Still generating — try again in a moment');return;}
+  navigator.clipboard.writeText(currentInviteBlob).then(()=>toast('Invite code copied! 📋'));
+}
+
 
 // ══ MODALS ══
 function closeModal(id){document.getElementById(id).classList.remove('open');}
@@ -1130,9 +1208,16 @@ function init(){
   if(state.tripEnd)document.getElementById('tripEnd').value=state.tripEnd;
   renderAll();
   const savedBlob=localStorage.getItem('fbInviteBlob'),savedCode=localStorage.getItem('fbCode'),savedName=localStorage.getItem('fbName');
-  if(savedBlob&&savedCode){decryptPayload(savedBlob).then(({config})=>{currentInviteBlob=savedBlob;connectFirestore(config,savedCode,savedName||'Family Member');}).catch(()=>{document.getElementById('setupOverlay').style.display='flex';});}
-  else{document.getElementById('setupOverlay').style.display='flex';}
+  if(savedBlob&&savedCode){
+    decryptPayload(savedBlob).then(({config})=>{
+      currentInviteBlob=savedBlob;
+      isCreator=false; // reconnecting — don't overwrite Firestore with local state
+      connectFirestore(config,savedCode,savedName||'Family Member');
+    }).catch(()=>{document.getElementById('setupOverlay').style.display='flex';});
+  } else { document.getElementById('setupOverlay').style.display='flex'; }
   document.getElementById('memberName').addEventListener('keydown',e=>{if(e.key==='Enter')saveMember();});
+  const joinEl=document.getElementById('joinBlob');// blob textarea — no enter-key override
+  const codeEl=document.getElementById('setupCode');if(codeEl&&!codeEl.value)codeEl.value=genShareCode();
   setInterval(()=>{ if(document.getElementById('db-activity-feed')) renderActivityFeed(); }, 30000);
   document.getElementById('setupCode').addEventListener('keydown',e=>{if(e.key==='Enter')doCreate();});
 }
