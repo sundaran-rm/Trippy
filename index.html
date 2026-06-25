@@ -32,14 +32,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .setup-rules code{background:rgba(0,0,0,.06);padding:1px 4px;border-radius:3px;font-size:11px;}
 .invite-field{background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:14px;font-family:monospace;font-size:11px;width:100%;min-height:90px;resize:vertical;outline:none;color:var(--text-muted);}
 .invite-field:focus{border-color:var(--primary);background:white;}
-/* STATUS BAR */
-#statusBar{display:none;background:rgba(0,0,0,.18);align-items:center;gap:10px;padding:6px 24px;font-size:12px;color:rgba(255,255,255,.85);flex-wrap:wrap;}
-#statusBar .s-left{display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap;}
-#statusBar .s-right{display:flex;align-items:center;gap:8px;}
-.conn-dot{width:8px;height:8px;border-radius:50%;background:#94a3b8;flex-shrink:0;transition:background .3s;}
-#onlineUsers{display:flex;align-items:center;gap:5px;}
-.status-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:white;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
-.status-btn:hover{background:rgba(255,255,255,.25);}
 .sync-flash{animation:flash .5s ease;}
 @keyframes flash{0%,100%{opacity:1;}50%{opacity:.4;}}
 /* HEADER */
@@ -255,9 +247,22 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   .db-countdown-num{font-size:36px;}
 }
 
+/* ══ SETTINGS ══ */
+.settings-section{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:18px;}
+.settings-section:last-of-type{border-bottom:none;padding-bottom:0;margin-bottom:0;}
+.settings-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text-muted);margin-bottom:10px;}
+.trip-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);background:white;margin-bottom:8px;transition:all .15s;}
+.trip-row.active{border-color:var(--primary);background:var(--primary-light);}
+.trip-row-icon{width:34px;height:34px;border-radius:9px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.trip-row-info{flex:1;min-width:0;}
+.trip-row-name{font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.trip-row-meta{font-size:11px;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;gap:6px;}
+.trip-online-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;display:inline-block;}
+.trip-offline-dot{width:7px;height:7px;border-radius:50%;background:#94a3b8;display:inline-block;}
+
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:white;padding:11px 22px;border-radius:24px;font-size:13px;font-weight:600;transition:transform .3s ease;z-index:999;pointer-events:none;white-space:nowrap;}
 #toast.show{transform:translateX(-50%) translateY(0);}
-@media(max-width:600px){.main{padding:16px;}.app-header{padding:0 16px;}.locations-grid{grid-template-columns:1fr;}.bill-summary-grid{grid-template-columns:1fr 1fr;}.timeline::before{left:54px;}#statusBar{padding:6px 16px;}.split-mode-btn{font-size:11px;padding:7px 4px;}}
+@media(max-width:600px){.main{padding:16px;}.app-header{padding:0 16px;}.locations-grid{grid-template-columns:1fr;}.bill-summary-grid{grid-template-columns:1fr 1fr;}.timeline::before{left:54px;}.split-mode-btn{font-size:11px;padding:7px 4px;}}
 </style>
 </head>
 <body>
@@ -320,12 +325,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 </div></div>
 </div>
 
-<!-- STATUS BAR -->
-<div id="statusBar">
-  <div class="s-left"><div class="conn-dot" id="connDot"></div><span id="connLabel">Connecting…</span><div id="onlineUsers"></div></div>
-  <div class="s-right"><button class="status-btn" onclick="openShareModal()">🔗 Share Trip</button><button class="status-btn" onclick="disconnectTrip()">⏏ Disconnect</button></div>
-</div>
-
 <!-- HEADER -->
 <header class="app-header">
   <div class="header-top">
@@ -336,7 +335,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     </div>
    
   </div>
-  <div class="members-strip" id="membersStrip"></div>
+  <div style="display:flex;align-items:center;gap:8px;padding-bottom:6px">
+    <div class="members-strip" id="membersStrip" style="flex:1;padding-bottom:0"></div>
+    <div id="onlineUsers" style="display:flex;align-items:center;gap:5px;"></div>
+    <button id="btnShare" class="btn" style="display:none;background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.2);padding:6px 12px;font-size:12px" onclick="openShareModal()">🔗 Share</button>
+    <button id="btnDisconnect" class="btn" style="display:none;background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.2);padding:6px 12px;font-size:12px" onclick="disconnectTrip()">⏏ Disconnect</button>
+    <button class="btn" style="background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.2);padding:6px 12px;font-size:12px" onclick="openSettings()">⚙️ Settings</button>
+  </div>
 </header>
 
 <!-- TABS -->
@@ -708,6 +713,44 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   </div>
 </div>
 
+<!-- SETTINGS -->
+<div class="modal-overlay" id="settingsModal" onclick="maybeCloseModal(event,'settingsModal')">
+  <div class="modal" style="max-width:500px;">
+    <div class="modal-title">⚙️ Settings</div>
+
+    <!-- CONNECTION -->
+    <div class="settings-section">
+      <div class="settings-section-label">🔌 Connection</div>
+      <div id="settings-conn-info" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);margin-bottom:10px;">
+        <div class="conn-dot" id="settings-conn-dot" style="width:10px;height:10px;border-radius:50%;background:#94a3b8;flex-shrink:0"></div>
+        <div style="flex:1;min-width:0">
+          <div id="settings-conn-label" style="font-weight:600;font-size:13px">Not connected</div>
+          <div id="settings-conn-sub" style="font-size:11px;color:var(--text-muted);margin-top:2px">Data is stored locally only</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="openConnectionSetup()">🔗 Change / Reconnect</button>
+    </div>
+
+    <!-- MY TRIPS -->
+    <div class="settings-section">
+      <div class="settings-section-label">✈️ My Trips</div>
+      <div id="settings-trips-list" style="margin-bottom:10px;"></div>
+      <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="createNewTrip()">＋ New Trip</button>
+    </div>
+
+    <!-- DANGER ZONE -->
+    <div class="settings-section">
+      <div class="settings-section-label" style="color:var(--coral)">⚠️ Danger Zone</div>
+      <button class="btn btn-danger" style="width:100%;justify-content:center;padding:10px" onclick="resetCurrentTrip()">🗑 Reset Current Trip Data</button>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:6px;text-align:center">
+        Clears all locations, events, expenses and packing for this trip
+      </div>
+    </div>
+
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('settingsModal')">Close</button></div>
+  </div>
+</div>
+
 <div id="toast"></div>
 <script>
 // ══ ENCRYPTION (AES-256-GCM) ══
@@ -741,7 +784,7 @@ function connectFirestore(config,code,name){
       }catch(e){console.error(e);}isListenerUpdate=false;
     },err=>{console.error(err);setConnStatus(false);});
     setupPresence();
-    document.getElementById('setupOverlay').style.display='none';document.getElementById('statusBar').style.display='flex';
+    document.getElementById('setupOverlay').style.display='none';
     setConnStatus(true);toast('🎉 Connected to "'+tripCode+'"');return true;
   }catch(e){console.error(e);toast('❌ Could not connect — check your Firebase config');return false;}
 }
@@ -759,10 +802,36 @@ function setupPresence(){
       users.map(u=>{const m=state.members.find(m=>m.name===u.name);return '<div title="'+u.name+'" style="width:20px;height:20px;border-radius:50%;background:'+(m?.color||'#888')+';border:2px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white">'+(u.name||'?')[0].toUpperCase()+'</div>';}).join('');
   });
 }
-function setConnStatus(ok){document.getElementById('connDot').style.background=ok?'#4ade80':'#f87171';document.getElementById('connLabel').textContent=ok?'Live sync · '+tripCode:'Reconnecting · '+tripCode;}
-function flashSync(){const bar=document.getElementById('statusBar');bar.classList.remove('sync-flash');void bar.offsetWidth;bar.classList.add('sync-flash');}
+function setConnStatus(ok){
+  // Show/hide Share and Disconnect buttons
+  const btnShare=document.getElementById('btnShare');
+  const btnDisc=document.getElementById('btnDisconnect');
+  if(btnShare) btnShare.style.display=ok?'':'none';
+  if(btnDisc)  btnDisc.style.display=ok?'':'none';
+  // Keep settings conn indicator in sync
+  const dot=document.getElementById('settings-conn-dot');
+  const lbl=document.getElementById('settings-conn-label');
+  const sub=document.getElementById('settings-conn-sub');
+  if(dot) dot.style.background=ok?'#4ade80':'#94a3b8';
+  if(lbl) lbl.textContent=ok?'Live sync · '+tripCode:'Not connected';
+  if(sub) sub.textContent=ok?'Changes sync instantly across all devices':'Data is stored locally only';
+}
+function flashSync(){
+  const bar=document.querySelector('.app-header');
+  if(!bar) return;
+  bar.classList.remove('sync-flash');void bar.offsetWidth;bar.classList.add('sync-flash');
+}
 function saveToFirestore(){if(!tripDocRef||isListenerUpdate)return;tripDocRef.set({tripName:state.tripName||'',tripStart:state.tripStart||'',tripEnd:state.tripEnd||'',members:JSON.stringify(state.members),locations:JSON.stringify(state.locations),events:JSON.stringify(state.events),expenses:JSON.stringify(state.expenses),packing:JSON.stringify(state.packing),activities:JSON.stringify(state.activities||[]),lastUpdated:firebase.firestore.FieldValue.serverTimestamp(),lastUpdatedBy:myName});}
-function save(){if(isListenerUpdate)return;if(db&&!hasReceivedFirstSnapshot)return;saveToFirestore();try{localStorage.setItem('famTrip',JSON.stringify(state));}catch(e){}}
+function save(){
+  if(isListenerUpdate)return;
+  if(db&&!hasReceivedFirstSnapshot)return;
+  saveToFirestore();
+  try{
+    localStorage.setItem('famTrip',JSON.stringify(state));
+    if(currentTripCode) localStorage.setItem('trip_'+currentTripCode,JSON.stringify(state));
+    updateTripInIndex();
+  }catch(e){}
+}
 
 // ══ APP STATE ══
 const MEMBER_COLORS=['#E05C52','#1E6B8C','#F0A500','#3A8A6E','#8B5CF6','#EC4899','#0891B2','#D97706','#059669','#7C3AED'];
@@ -785,13 +854,20 @@ function doCreate(){
   if(!code){code=genShareCode();document.getElementById('setupCode').value=code;}
   let config;try{config=parseConfig(raw);}catch(e){toast('❌ '+e.message);return;}
   isCreator=true;
+  currentTripCode=code;
+  localStorage.setItem('currentTrip',code);
   if(connectFirestore(config,code,name)){
     encryptPayload({config,tripCode:tripCode}).then(blob=>{
       currentInviteBlob=blob;
       localStorage.setItem('fbInviteBlob',blob);
+      updateTripInIndex({isOnline:true,inviteBlob:blob,name:state.tripName||'My Trip'});
     });
     localStorage.setItem('fbCode',tripCode);
     localStorage.setItem('fbName',name);
+    if(!savedTrips.find(t=>t.code===tripCode)){
+      savedTrips.unshift({code:tripCode,name:state.tripName||'My Trip',isOnline:true,inviteBlob:'',lastAccessed:Date.now()});
+      saveTripsIndex();
+    }
   }
 }
 
@@ -805,15 +881,42 @@ async function doJoin(){
     isCreator=false;
     if(connectFirestore(config,code,name)){
       currentInviteBlob=blobStr;
+      currentTripCode=tripCode;
+      localStorage.setItem('currentTrip',tripCode);
       localStorage.setItem('fbInviteBlob',blobStr);
       localStorage.setItem('fbCode',tripCode);
       localStorage.setItem('fbName',name);
+      if(!savedTrips.find(t=>t.code===tripCode)){
+        savedTrips.unshift({code:tripCode,name:'Trip',isOnline:true,inviteBlob:blobStr,lastAccessed:Date.now()});
+        saveTripsIndex();
+      }else{updateTripInIndex({isOnline:true,inviteBlob:blobStr});}
     }
   }catch(e){toast('❌ Invalid invite code — make sure you copied the full string');}
 }
 
-function useOffline(){document.getElementById('setupOverlay').style.display='none';renderAll();toast('Running offline');}
-function disconnectTrip(){if(!confirm('Disconnect from this trip?'))return;if(firestoreUnsubscribe)firestoreUnsubscribe();clearInterval(presenceInterval);['fbConfig','fbCode','fbName'].forEach(k=>localStorage.removeItem(k));location.reload();}
+function useOffline(){
+  document.getElementById('setupOverlay').style.display='none';
+  // Register as offline trip if not already in index
+  const code=document.getElementById('setupCode')?.value?.trim()||currentTripCode||'local_'+genShareCode();
+  if(!currentTripCode||currentTripCode==='default'){
+    currentTripCode=code||'offline_'+genShareCode();
+    localStorage.setItem('currentTrip',currentTripCode);
+  }
+  if(!savedTrips.find(t=>t.code===currentTripCode)){
+    savedTrips.unshift({code:currentTripCode,name:state.tripName||'My Trip',isOnline:false,inviteBlob:'',lastAccessed:Date.now()});
+    saveTripsIndex();
+  }
+  renderAll();toast('Running offline — data saved locally');
+}
+function disconnectTrip(){
+  if(!confirm('Disconnect from Firestore? You can reconnect via Settings.'))return;
+  saveCurrentTripSnapshot();
+  disconnectFirestoreOnly();
+  // Mark trip as offline in index
+  updateTripInIndex({isOnline:false});
+  currentInviteBlob='';
+  toast('Disconnected — running offline');
+}
 function switchSetupTab(tab,btn){document.querySelectorAll('.setup-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('setupCreate').style.display=tab==='create'?'':'none';document.getElementById('setupJoin').style.display=tab==='join'?'':'none';}
 function toggleGuide(){document.getElementById('guideBox').classList.toggle('open');}
 
@@ -980,6 +1083,190 @@ function renderPackingList(){const c=document.getElementById('packingList'),f=st
 
 // ══ TOAST ══
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2600);}
+
+// ══ TRIPS MANAGEMENT ══════════════════════════════════════════════
+let savedTrips = [];   // [{code,name,isOnline,inviteBlob,lastAccessed}]
+let currentTripCode = '';
+
+function getEmptyState(){
+  return {tripName:'New Trip',tripStart:'',tripEnd:'',members:[],locations:[],events:[],expenses:[],packing:[],activities:[],selectedDay:0,locationFilter:'all',packingFilter:'all'};
+}
+
+function loadTripsIndex(){
+  try{ savedTrips=JSON.parse(localStorage.getItem('trips_index')||'[]'); }catch(_){savedTrips=[];}
+  currentTripCode=localStorage.getItem('currentTrip')||'';
+}
+
+function saveTripsIndex(){
+  try{ localStorage.setItem('trips_index',JSON.stringify(savedTrips)); }catch(_){}
+}
+
+function updateTripInIndex(extra={}){
+  if(!currentTripCode) return;
+  let trip=savedTrips.find(t=>t.code===currentTripCode);
+  if(!trip){
+    trip={code:currentTripCode,name:state.tripName||'Trip',isOnline:!!db,inviteBlob:currentInviteBlob,lastAccessed:Date.now()};
+    savedTrips.unshift(trip);
+  }
+  trip.name=state.tripName||trip.name;
+  trip.isOnline=!!db;
+  if(currentInviteBlob) trip.inviteBlob=currentInviteBlob;
+  trip.lastAccessed=Date.now();
+  Object.assign(trip,extra);
+  saveTripsIndex();
+}
+
+function saveCurrentTripSnapshot(){
+  if(!currentTripCode) return;
+  try{ localStorage.setItem('trip_'+currentTripCode,JSON.stringify(state)); }catch(_){}
+  updateTripInIndex();
+}
+
+// Disconnect from Firestore without page reload
+function disconnectFirestoreOnly(){
+  if(firestoreUnsubscribe){firestoreUnsubscribe();firestoreUnsubscribe=null;}
+  clearInterval(presenceInterval);
+  if(db&&tripCode){
+    try{db.collection('trips').doc(tripCode).collection('presence').doc(mySessionId).delete();}catch(_){}
+  }
+  db=null;tripDocRef=null;tripCode='';
+  hasReceivedFirstSnapshot=false;isCreator=false;
+  
+}
+
+async function switchToTrip(code){
+  if(code===currentTripCode){closeModal('settingsModal');return;}
+  saveCurrentTripSnapshot();
+  disconnectFirestoreOnly();
+  currentTripCode=code;
+  localStorage.setItem('currentTrip',code);
+
+  // Load state for this trip
+  try{
+    const saved=JSON.parse(localStorage.getItem('trip_'+code)||'{}');
+    state={...getEmptyState(),...saved};
+  }catch(_){state=getEmptyState();}
+
+  const trip=savedTrips.find(t=>t.code===code);
+  if(trip&&trip.isOnline&&trip.inviteBlob){
+    try{
+      const{config,tripCode:tc}=await decryptPayload(trip.inviteBlob);
+      currentInviteBlob=trip.inviteBlob;
+      isCreator=false;
+      connectFirestore(config,tc,myName||'Member');
+    }catch(_){
+      currentInviteBlob='';
+      renderAll();
+      toast('Could not reconnect — running offline');
+    }
+  }else{
+    currentInviteBlob='';
+    renderAll();
+  }
+  closeModal('settingsModal');
+  toast('Switched to: '+(trip?.name||code));
+}
+
+function createNewTrip(){
+  saveCurrentTripSnapshot();
+  disconnectFirestoreOnly();
+  const code='local_'+genShareCode();
+  currentTripCode=code;
+  localStorage.setItem('currentTrip',code);
+  state=getEmptyState();
+  currentInviteBlob='';
+  savedTrips.unshift({code,name:'New Trip',isOnline:false,inviteBlob:'',lastAccessed:Date.now()});
+  saveTripsIndex();
+  localStorage.setItem('trip_'+code,JSON.stringify(state));
+  renderAll();
+  closeModal('settingsModal');
+  document.getElementById('setupOverlay').style.display='flex';
+}
+
+function deleteTrip(code,e){
+  e.stopPropagation();
+  if(code===currentTripCode){toast('Switch to another trip before deleting this one');return;}
+  if(!confirm('Delete this trip? All local data will be removed.')) return;
+  savedTrips=savedTrips.filter(t=>t.code!==code);
+  localStorage.removeItem('trip_'+code);
+  saveTripsIndex();
+  renderSettingsModal();
+  toast('Trip deleted');
+}
+
+function resetCurrentTrip(){
+  const isOnline=!!db;
+  const msg=isOnline
+    ?'This will disconnect from Firestore and reset all local data for this trip.\n\nOthers connected to this trip will keep their data.\n\nContinue?'
+    :'Reset all data for this trip? This cannot be undone.';
+  if(!confirm(msg)) return;
+  closeModal('settingsModal');
+  disconnectFirestoreOnly();
+  // Clear state
+  state=getEmptyState();state.tripName='New Trip';
+  currentInviteBlob='';
+  localStorage.removeItem('trip_'+currentTripCode);
+  // Update index — mark as offline
+  updateTripInIndex({isOnline:false,inviteBlob:''});
+  // Clear legacy keys
+  localStorage.removeItem('famTrip');
+  localStorage.removeItem('fbInviteBlob');
+  localStorage.removeItem('fbCode');
+  localStorage.removeItem('fbName');
+  renderAll();
+  document.getElementById('setupOverlay').style.display='flex';
+  toast('Trip reset');
+}
+
+// ── Settings modal ────────────────────────────────────────────────
+function openSettings(){
+  renderSettingsModal();
+  document.getElementById('settingsModal').classList.add('open');
+}
+
+function renderSettingsModal(){
+  // Connection status
+  const online=!!db;
+  document.getElementById('settings-conn-dot').style.background=online?'#4ade80':'#94a3b8';
+  document.getElementById('settings-conn-label').textContent=online?'Live sync · '+tripCode:'Not connected';
+  document.getElementById('settings-conn-sub').textContent=online?'Changes sync instantly across all devices':'Data is stored locally only';
+
+  // Trips list
+  const list=document.getElementById('settings-trips-list');
+  if(savedTrips.length===0){
+    list.innerHTML='<div style="text-align:center;padding:12px;color:var(--text-muted);font-size:13px">No saved trips yet</div>';
+    return;
+  }
+  const sorted=[...savedTrips].sort((a,b)=>(b.lastAccessed||0)-(a.lastAccessed||0));
+  list.innerHTML=sorted.map(t=>{
+    const isCurrent=t.code===currentTripCode;
+    const dotHtml=t.isOnline
+      ?'<span class="trip-online-dot"></span><span style="font-size:11px;color:var(--green)">Online</span>'
+      :'<span class="trip-offline-dot"></span><span style="font-size:11px;color:var(--text-muted)">Offline</span>';
+    const ago=t.lastAccessed?relTime(t.lastAccessed):'';
+    return `<div class="trip-row${isCurrent?' active':''}">
+      <div class="trip-row-icon">${t.isOnline?'🌐':'📁'}</div>
+      <div class="trip-row-info">
+        <div class="trip-row-name">${t.name||t.code}</div>
+        <div class="trip-row-meta">${dotHtml}${ago?'<span>· '+ago+'</span>':''}</div>
+      </div>
+      ${isCurrent
+        ?'<span style="font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:3px 8px;border-radius:8px">Current</span>'
+        :`<button class="btn btn-ghost" style="font-size:12px;padding:5px 10px" onclick="switchToTrip('${t.code}')">Switch</button>`
+      }
+      <button class="icon-btn" style="flex-shrink:0" onclick="deleteTrip('${t.code}',event)" title="Delete">🗑</button>
+    </div>`;
+  }).join('');
+}
+
+function openConnectionSetup(){
+  closeModal('settingsModal');
+  // Pre-fill setup screen with current values if available
+  const codeEl=document.getElementById('setupCode');
+  if(codeEl&&!codeEl.value&&currentTripCode) codeEl.value=currentTripCode.replace('local_','');
+  document.getElementById('setupOverlay').style.display='flex';
+}
+
 
 // ══ INIT ══
 
@@ -1200,6 +1487,24 @@ function renderDashboard(){
 }
 
 function init(){
+  loadTripsIndex();
+  // Migrate legacy single-trip data into trips index
+  if(savedTrips.length===0){
+    const legacyCode=localStorage.getItem('fbCode')||'default';
+    currentTripCode=legacyCode;
+    localStorage.setItem('currentTrip',legacyCode);
+    savedTrips=[{code:legacyCode,name:state.tripName||'My Trip',isOnline:false,inviteBlob:localStorage.getItem('fbInviteBlob')||'',lastAccessed:Date.now()}];
+    saveTripsIndex();
+    localStorage.setItem('trip_'+legacyCode,JSON.stringify(state));
+  }else if(!currentTripCode){
+    currentTripCode=savedTrips[0]?.code||'default';
+    localStorage.setItem('currentTrip',currentTripCode);
+  }
+  // Load state for current trip
+  try{
+    const saved=JSON.parse(localStorage.getItem('trip_'+currentTripCode)||localStorage.getItem('famTrip')||'{}');
+    state={...state,...saved};
+  }catch(_){}
   document.getElementById('tripName').addEventListener('input',()=>{state.tripName=document.getElementById('tripName').value;save();});
   document.getElementById('tripStart').addEventListener('change',()=>{state.tripStart=document.getElementById('tripStart').value;save();renderDaySelector();});
   document.getElementById('tripEnd').addEventListener('change',()=>{state.tripEnd=document.getElementById('tripEnd').value;save();renderDaySelector();});
