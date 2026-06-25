@@ -41,9 +41,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .trip-icon{width:42px;height:42px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
 .trip-name-input{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;color:white;background:transparent;border:none;outline:none;width:100%;max-width:320px;border-bottom:1.5px dashed rgba(255,255,255,.3);padding-bottom:2px;}
 .trip-name-input::placeholder{color:rgba(255,255,255,.5);}
-.trip-dates{font-size:12px;color:rgba(255,255,255,.65);margin-top:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.trip-dates input[type="date"]{background:rgba(255,255,255,.12);border:none;border-radius:6px;color:white;padding:3px 7px;font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;outline:none;}
-.trip-dates input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.7;}
+
 .members-strip{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-bottom:14px;}
 .member-badge{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.14);border-radius:20px;padding:4px 10px 4px 5px;font-size:12px;color:rgba(255,255,255,.9);}
 .member-avatar{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
@@ -260,6 +258,63 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .trip-online-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;display:inline-block;}
 .trip-offline-dot{width:7px;height:7px;border-radius:50%;background:#94a3b8;display:inline-block;}
 
+/* ══ DATE DISPLAY ══ */
+.trip-date-display{
+  display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;
+  cursor:pointer;margin-top:5px;padding:5px 0;
+}
+.trip-date-display:hover .trip-date-range{opacity:.8;}
+.trip-date-range{
+  font-family:'Sora',sans-serif;font-size:15px;font-weight:700;
+  color:white;letter-spacing:.2px;
+}
+.trip-date-nights{
+  font-size:11px;font-weight:700;
+  background:rgba(255,255,255,.15);color:rgba(255,255,255,.85);
+  padding:3px 9px;border-radius:20px;
+}
+.trip-date-countdown{
+  font-size:11px;font-weight:800;
+  background:var(--accent);color:#1A2830;
+  padding:3px 9px;border-radius:20px;
+  animation:countPulse 2s ease-in-out infinite;
+}
+.trip-date-live{
+  font-size:11px;font-weight:800;
+  background:#4ade80;color:#1A2830;
+  padding:3px 9px;border-radius:20px;
+}
+.trip-date-done-label{
+  font-size:12px;font-weight:600;
+  background:rgba(255,255,255,.1);color:rgba(255,255,255,.55);
+  padding:3px 9px;border-radius:20px;
+}
+.trip-date-empty{
+  font-size:13px;color:rgba(255,255,255,.4);
+  border-bottom:1.5px dashed rgba(255,255,255,.25);
+  padding-bottom:2px;letter-spacing:.2px;
+}
+@keyframes countPulse{0%,100%{opacity:1;}50%{opacity:.75;}}
+.trip-date-edit{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin-top:6px;padding:8px 12px;
+  background:rgba(255,255,255,.1);border-radius:10px;
+}
+.trip-date-input{
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);
+  border-radius:7px;color:white;padding:5px 9px;font-size:13px;
+  font-family:'Inter',sans-serif;cursor:pointer;outline:none;
+}
+.trip-date-input::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.7;}
+.trip-date-arrow{color:rgba(255,255,255,.5);font-weight:700;font-size:15px;}
+.trip-date-done{
+  background:var(--accent);border:none;border-radius:7px;
+  color:#1A2830;font-family:'Sora',sans-serif;font-size:12px;
+  font-weight:700;padding:5px 12px;cursor:pointer;
+  transition:opacity .15s;
+}
+.trip-date-done:hover{opacity:.85;}
+
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:white;padding:11px 22px;border-radius:24px;font-size:13px;font-weight:600;transition:transform .3s ease;z-index:999;pointer-events:none;white-space:nowrap;}
 #toast.show{transform:translateX(-50%) translateY(0);}
 @media(max-width:600px){.main{padding:16px;}.app-header{padding:0 16px;}.locations-grid{grid-template-columns:1fr;}.bill-summary-grid{grid-template-columns:1fr 1fr;}.timeline::before{left:54px;}.split-mode-btn{font-size:11px;padding:7px 4px;}}
@@ -330,7 +385,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   <div class="header-top">
     <div class="trip-brand"><div class="trip-icon">✈️</div>
       <div><input class="trip-name-input" id="tripName" type="text" placeholder="Name your trip…" value="Family Summer Adventure">
-        <div class="trip-dates"><span>From</span><input type="date" id="tripStart"><span>To</span><input type="date" id="tripEnd"></div>
+        <!-- DATE DISPLAY — click to edit -->
+        <div id="tripDateDisplay" class="trip-date-display" onclick="openDateEdit()" title="Click to set dates"></div>
+        <div id="tripDateEdit" class="trip-date-edit" style="display:none">
+          <input type="date" id="tripStart" class="trip-date-input">
+          <span class="trip-date-arrow">→</span>
+          <input type="date" id="tripEnd" class="trip-date-input">
+          <button class="trip-date-done" onclick="closeDateEdit()">✓ Done</button>
+        </div>
       </div>
     </div>
    
@@ -942,7 +1004,7 @@ function maybeCloseModal(e,id){if(e.target===document.getElementById(id))closeMo
 // ══ TABS ══
 function switchTab(tab){document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('panel-'+tab).classList.add('active');document.getElementById('tab-'+tab).classList.add('active');}
 function updateCounts(){document.getElementById('cnt-locations').textContent=state.locations.length;document.getElementById('cnt-schedule').textContent=state.events.length;document.getElementById('cnt-bills').textContent=state.expenses.length;document.getElementById('cnt-members').textContent=state.members.length;}
-function renderAll(){renderDashboard();if(state.tripName)document.getElementById('tripName').value=state.tripName;if(state.tripStart)document.getElementById('tripStart').value=state.tripStart;if(state.tripEnd)document.getElementById('tripEnd').value=state.tripEnd;renderMembersStrip();renderLocations();renderDaySelector();renderTimeline();renderExpenses();renderBalances();renderPackingList();renderMembersTab();updateCounts();}
+function renderAll(){renderDashboard();updateDateDisplay();if(state.tripName)document.getElementById('tripName').value=state.tripName;if(state.tripStart)document.getElementById('tripStart').value=state.tripStart;if(state.tripEnd)document.getElementById('tripEnd').value=state.tripEnd;renderMembersStrip();renderLocations();renderDaySelector();renderTimeline();renderExpenses();renderBalances();renderPackingList();renderMembersTab();updateCounts();}
 
 // ══ MEMBERS ══
 const CAT_COLOR={Sightseeing:'#1E6B8C',Restaurant:'#E05C52',Hotel:'#F0A500',Activity:'#3A8A6E',Shopping:'#8B5CF6',Transport:'#6B7E8A',Beach:'#0891B2',Nature:'#059669',Other:'#D97706'};
@@ -1334,6 +1396,54 @@ function renderActivityFeed(){
 }
 
 
+// ══ DATE DISPLAY ═════════════════════════════════════════════════
+function updateDateDisplay(){
+  const sVal=document.getElementById('tripStart')?.value;
+  const eVal=document.getElementById('tripEnd')?.value;
+  const el=document.getElementById('tripDateDisplay');
+  if(!el) return;
+
+  if(sVal && eVal){
+    const start=new Date(sVal+'T00:00'), end=new Date(eVal+'T00:00');
+    const nights=Math.round((end-start)/(86400000));
+    const today=new Date();today.setHours(0,0,0,0);
+    const daysUntil=Math.ceil((start-today)/86400000);
+    const fmtDate=d=>d.toLocaleDateString('en',{weekday:'short',month:'short',day:'numeric'});
+    const year=start.getFullYear()!==today.getFullYear()||end.getFullYear()!==today.getFullYear()?', '+start.getFullYear():'';
+
+    // Countdown badge
+    let badge='';
+    if(daysUntil>0){
+      badge=`<span class="trip-date-countdown">${daysUntil} day${daysUntil!==1?'s':''} away</span>`;
+    }else if(daysUntil<=0 && today<=end){
+      badge='<span class="trip-date-live">✈️ On trip!</span>';
+    }else{
+      badge='<span class="trip-date-done-label">Completed</span>';
+    }
+
+    el.innerHTML=
+      `<span class="trip-date-range">${fmtDate(start)}${year} &nbsp;→&nbsp; ${fmtDate(end)}${year}</span>`+
+      `<span class="trip-date-nights">${nights} night${nights!==1?'s':''}</span>`+
+      badge;
+  }else{
+    el.innerHTML='<span class="trip-date-empty">📅 Set travel dates</span>';
+  }
+}
+
+function openDateEdit(){
+  document.getElementById('tripDateDisplay').style.display='none';
+  const edit=document.getElementById('tripDateEdit');
+  edit.style.display='flex';
+  edit.querySelector('.trip-date-input')?.focus();
+}
+
+function closeDateEdit(){
+  document.getElementById('tripDateDisplay').style.display='';
+  document.getElementById('tripDateEdit').style.display='none';
+  updateDateDisplay();
+}
+
+
 // ══ DASHBOARD ══
 function renderDashboard(){
   const today = new Date(); today.setHours(0,0,0,0);
@@ -1506,11 +1616,12 @@ function init(){
     state={...state,...saved};
   }catch(_){}
   document.getElementById('tripName').addEventListener('input',()=>{state.tripName=document.getElementById('tripName').value;save();});
-  document.getElementById('tripStart').addEventListener('change',()=>{state.tripStart=document.getElementById('tripStart').value;save();renderDaySelector();});
-  document.getElementById('tripEnd').addEventListener('change',()=>{state.tripEnd=document.getElementById('tripEnd').value;save();renderDaySelector();});
+  document.getElementById('tripStart').addEventListener('change',()=>{state.tripStart=document.getElementById('tripStart').value;save();renderDaySelector();updateDateDisplay();});
+  document.getElementById('tripEnd').addEventListener('change',()=>{state.tripEnd=document.getElementById('tripEnd').value;save();renderDaySelector();updateDateDisplay();});
   if(state.tripName)document.getElementById('tripName').value=state.tripName;
   if(state.tripStart)document.getElementById('tripStart').value=state.tripStart;
   if(state.tripEnd)document.getElementById('tripEnd').value=state.tripEnd;
+  updateDateDisplay();
   renderAll();
   const savedBlob=localStorage.getItem('fbInviteBlob'),savedCode=localStorage.getItem('fbCode'),savedName=localStorage.getItem('fbName');
   if(savedBlob&&savedCode){
